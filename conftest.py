@@ -8,25 +8,29 @@ from webdriver_manager.firefox import GeckoDriverManager
 
 def pytest_addoption(parser):
     """Добавление опций командной строки"""
-    parser.addoption("--browser", action="store", default="chrome", help="Браузер для тестов: chrome или firefox")
-    parser.addoption("--url", action="store", default="https://stellarburgers.nomoreparties.site", 
+    parser.addoption("--browser", action="store", default="chrome", 
+                     help="Браузер для тестов: chrome или firefox")
+    parser.addoption("--url", action="store", 
+                     default="https://stellarburgers.education-services.ru/", 
                      help="Базовый URL приложения")
 
 
 @pytest.fixture(scope="function")
 def driver(request):
-    """Фикстура для инициализации драйвера"""
+    """Фикстура для создания драйвера"""
     browser = request.config.getoption("--browser")
     url = request.config.getoption("--url")
     
     if browser == "chrome":
+        # Для Chrome
         options = webdriver.ChromeOptions()
-        options.add_argument("--window-size=1920,1080")
+        options.add_argument("--start-maximized")
         driver = webdriver.Chrome(
             service=ChromeService(ChromeDriverManager().install()),
             options=options
         )
     elif browser == "firefox":
+        # Для Firefox
         options = webdriver.FirefoxOptions()
         options.add_argument("--width=1920")
         options.add_argument("--height=1080")
@@ -49,4 +53,4 @@ def driver(request):
 def test_data():
     """Фикстура для тестовых данных"""
     from data import TestData
-    return TestData
+    return TestData()

@@ -1,3 +1,10 @@
+import sys
+import os
+
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
+
 from pages.main_page import MainPage
 
 
@@ -7,6 +14,9 @@ class TestConstructor:
     def test_buns_section_navigation(self, driver):
         """Переход к разделу 'Булки'"""
         main_page = MainPage(driver)
+
+        # Клик по разделу "Соусы"
+        main_page.click_sauces_section()
         
         # Клик по разделу "Булки"
         main_page.click_buns_section()

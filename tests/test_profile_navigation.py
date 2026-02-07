@@ -1,37 +1,24 @@
+import sys
+import os
 import pytest
+
+# Добавляем пути к проекту в PYTHONPATH
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
+
+# Импорты - только ОДИН раз каждый класс
 from pages.main_page import MainPage
-from pages.login_page import LoginPage
 from pages.profile_page import ProfilePage
 
 
 class TestProfileNavigation:
     """Тесты навигации в личном кабинете"""
     
-    @pytest.fixture
-    def logged_in_user(self, driver, test_data):
-        """Фикстура для входа пользователя"""
-        main_page = MainPage(driver)
-        login_page = LoginPage(driver)
-        
-        # Регистрация и вход
-        user_data = test_data.get_valid_user()
-        
-        # Переход на страницу регистрации и регистрация
-        driver.get("https://stellarburgers.nomoreparties.site/register")
-        from pages.registration_page import RegistrationPage
-        registration_page = RegistrationPage(driver)
-        registration_page.register(
-            user_data["name"],
-            user_data["email"],
-            user_data["password"]
-        )
-        
-        # Вход
-        login_page.login(user_data["email"], user_data["password"])
-        
-        return user_data
+    @pytest.mark.parametrize("user_data", [
+        {"email": "maria_egorenkova_38_546@yandex.ru", "password": "123456"},
+    ])
     
-    def test_navigate_to_personal_account(self, driver, logged_in_user):
+    def test_navigate_to_personal_account(self, driver, logged_in_user, user_data):
         """Переход в личный кабинет"""
         main_page = MainPage(driver)
         profile_page = ProfilePage(driver)

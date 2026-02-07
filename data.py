@@ -1,55 +1,37 @@
 import random
 import string
-
+import time
 
 class TestData:
-    """Генераторы тестовых данных"""
+    def __init__(self):
+        self.base_email = "test_user_"
+        self.base_password = "Password123"
+        self.base_name = "Test User"
     
-    @staticmethod
-    def generate_email(cohort=38):
-        """Генерация email в формате имя_фамилия_номер_когорты_3цифры@домен
-        
-        Args:
-            cohort: номер когорты 38
-        """
-        name = "maria"
-        surname = "egorenkova"
-        random_digits = ''.join(random.choices(string.digits, k=3))
-        return f"{name}_{surname}_{cohort}{random_digits}@yandex.ru"
+    def generate_random_email(self):
+        """Генерация уникального email"""
+        timestamp = str(int(time.time()))
+        random_str = ''.join(random.choices(string.ascii_lowercase, k=5))
+        return f"{self.base_email}_{timestamp}_{random_str}@example.com"
     
-    @staticmethod
-    def generate_password(length=6):
-        """Генерация пароля
-        
-        Args:
-            length: длина пароля (минимум 6 символов)
-        """
-        if length < 6:
-            length = 6
-        # Используем буквы и цифры для пароля
-        characters = string.ascii_letters + string.digits
-        return ''.join(random.choices(characters, k=length))
+    def generate_random_name(self):
+        """Генерация уникального имени"""
+        timestamp = str(int(time.time()))
+        random_str = ''.join(random.choices(string.ascii_lowercase, k=3))
+        return f"{self.base_name}_{timestamp}_{random_str}"
     
-    @staticmethod
-    def generate_name():
-        """Генерация имени"""
-        names = ["Алексей", "Мария", "Иван", "Ольга", "Дмитрий", "Елена", "Сергей", "Анна"]
-        return random.choice(names)
-    
-    @staticmethod
-    def get_valid_user():
-        """Получение валидных данных пользователя"""
+    def get_unregistered_user(self):
+        """Возвращает данные незарегистрированного пользователя"""
         return {
-            "name": TestData.generate_name(),
-            "email": TestData.generate_email(),
-            "password": TestData.generate_password(8)
+            "email": self.generate_random_email(),
+            "password": self.base_password + str(random.randint(100, 999)),
+            "name": self.generate_random_name()
         }
     
-    @staticmethod
-    def get_short_password_user():
-        """Получение данных пользователя с коротким паролем"""
+    def get_valid_user(self):
+        """Возвращает данные для тестов (можно использовать для регистрации)"""
         return {
-            "name": TestData.generate_name(),
-            "email": TestData.generate_email(),
-            "password": TestData.generate_password(5)  # Короткий пароль
+            "email": self.generate_random_email(),
+            "password": self.base_password,
+            "name": self.generate_random_name()
         }

@@ -1,8 +1,15 @@
-import pytest
+import sys
+import os
+
+# Добавляем пути к проекту в PYTHONPATH
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
+
+# Импорты
 from pages.main_page import MainPage
 from pages.registration_page import RegistrationPage
 from pages.login_page import LoginPage
-
+import pytest
 
 class TestRegistration:
     """Тесты регистрации"""
@@ -10,7 +17,7 @@ class TestRegistration:
     @pytest.mark.parametrize("user_data", [
         {"name": "Мария", "email": "maria_egorenkova_38_546@yandex.ru", "password": "123456"},
     ])
-    def test_successful_registration(self, driver, test_data, user_data):
+    def test_successful_registration(self, driver, user_data):
         """Успешная регистрация"""
         main_page = MainPage(driver)
         registration_page = RegistrationPage(driver)

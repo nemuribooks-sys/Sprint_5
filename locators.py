@@ -16,14 +16,13 @@ class Locators:
     LOGO = (By.XPATH, "//div[@class='AppHeader_header__logo__2D0X2']")  # Логотип Stellar Burgers
     
     # Формы
-    NAME_INPUT = (By.XPATH, "//label[text()='Имя']/following-sibling::input")  # Поле ввода имени
-    EMAIL_INPUT = (By.XPATH, "//label[text()='Email']/following-sibling::input")  # Поле ввода email
-    PASSWORD_INPUT = (By.XPATH, "//input[@type='password']")  # Поле ввода пароля
+    NAME_INPUT = (By.XPATH, "//label[text()='Имя']")  # Поле ввода имени
+    EMAIL_INPUT = (By.XPATH, "//label[text()='Email']")  # Поле ввода email
+    PASSWORD_INPUT = (By.XPATH, "//label[text()='Пароль']")  # Поле ввода пароля
     
     # Кнопки форм
     REGISTER_BUTTON = (By.XPATH, "//button[text()='Зарегистрироваться']")  # Кнопка регистрации
-    LOGIN_FORM_BUTTON = (By.XPATH, "//button[text()='Войти']")  # Кнопка входа в форме
-    SAVE_BUTTON = (By.XPATH, "//button[text()='Сохранить']")  # Кнопка сохранения
+    LOGIN_FORM_BUTTON = (By.XPATH, "//a[text()='Войти']")  # Кнопка входа в форме
     
     # Ссылки
     LOGIN_LINK = (By.XPATH, "//a[text()='Войти']")  # Ссылка "Войти" на странице регистрации
@@ -36,9 +35,9 @@ class Locators:
     LOGOUT_BUTTON = (By.XPATH, "//button[text()='Выход']")  # Кнопка выхода из аккаунта
     
     # Конструктор
-    BUNS_SECTION = (By.XPATH, "//span[text()='Булки']/parent::div")  # Раздел "Булки"
-    SAUCES_SECTION = (By.XPATH, "//span[text()='Соусы']/parent::div")  # Раздел "Соусы"
-    FILLINGS_SECTION = (By.XPATH, "//span[text()='Начинки']/parent::div")  # Раздел "Начинки"
+    BUNS_SECTION = (By.XPATH, "//span[text()='Булки']")  # Раздел "Булки"
+    SAUCES_SECTION = (By.XPATH, "//span[text()='Соусы']")  # Раздел "Соусы"
+    FILLINGS_SECTION = (By.XPATH, "//span[text()='Начинки']")  # Раздел "Начинки"
     
     # Активные разделы конструктора
     ACTIVE_SECTION = (By.XPATH, "//div[contains(@class, 'current')]")  # Активный раздел
