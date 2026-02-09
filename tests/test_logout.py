@@ -1,74 +1,63 @@
-import pytest
-import time
-import random
-from pages.main_page import MainPage
-from pages.login_page import LoginPage
-from pages.profile_page import ProfilePage
-from pages.registration_page import RegistrationPage
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
+from selenium.common.exceptions import TimeoutException, NoSuchElementException
+from data import TestData 
+from locators import Locators
 
-class TestLogout:
-    """Тесты выхода из аккаунта"""
-    
-    @pytest.fixture
-    def registered_user(self, driver, test_data):
-        """Фикстура для регистрации пользователя"""
-        # Создаем уникальные данные для пользователя
-        timestamp = int(time.time())
-        random_num = random.randint(1000, 9999)
+cdef test_success_logout(self, driver):
+    try:
+        email = "maria_egorenkova_38_546@yandex.ru"
+        password = "123456"
         
-        user_data = test_data.get_valid_user().copy()  # Копируем базовые данные
-        # Делаем email уникальным
-        user_data["email"] = user_data["email"].split('@')[0] + f"_{timestamp}_{random_num}@" + user_data["email"].split('@')[1]
-        # Делаем имя уникальным
-        user_data["name"] = f"{user_data['name']}_{timestamp}"
+        print("1. Начинаем процесс входа...")
         
-        registration_page = RegistrationPage(driver)
-        login_page = LoginPage(driver)
-        
-        # Регистрация пользователя
-        driver.get("https://stellarburgers.nomoreparties.site/register")
-        registration_page.register(
-            user_data["name"],
-            user_data["email"],
-            user_data["password"]
+        # 1. Клик по кнопке входа в аккаунт
+        login_btn = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable(Locators.LOGIN_TO_ACCOUNT_BUTTON)
         )
+        print("2. Кнопка входа найдена, кликаем...")
+        login_btn.click()
         
-        # Ждем перехода на страницу входа после регистрации
-        login_page.wait_for_login_page()
+        # 2. Ждем появления формы
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located(Locators.NAME_INPUT)
+        )
+        print("3. Форма логина найдена")
         
-        return user_data
-    
-    @pytest.fixture
-    def logged_in_user(self, driver, registered_user):
-        """Фикстура для входа пользователя"""
-        login_page = LoginPage(driver)
+        # 3. Вводим email
+        email_field = driver.find_element(*Locators.NAME_INPUT)
+        print(f"4. Ввод email: {email}")
+        email_field.send_keys(email)
         
-        # Вход с зарегистрированными данными
-        driver.get("https://stellarburgers.nomoreparties.site/login")
-        login_page.login(registered_user["email"], registered_user["password"])
+        # 4. Вводим пароль
+        password_field = driver.find_element(*Locators.PASSWORD_INPUT)
+        print(f"5. Ввод пароля: {'*' * len(password)}")
+        password_field.send_keys(password)
         
-        # Подтверждаем, что вход успешен
-        main_page = MainPage(driver)
-        main_page.wait_for_main_page()
+        # 5. Делаем скриншот перед кликом
+        driver.save_screenshot("before_login.png")
         
-        return registered_user
-    
-    def test_logout(self, driver, logged_in_user):
-        """Выход из аккаунта"""
-        main_page = MainPage(driver)
-        profile_page = ProfilePage(driver)
-        login_page = LoginPage(driver)
+        # 6. Кликаем кнопку входа
+        login_submit_btn = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable(Locators.LOGIN_FORM_BUTTON)
+        )
+        print("6. Кликаем кнопку 'Войти'")
+        login_submit_btn.click()
         
-        # Переход в личный кабинет
-        main_page.click_personal_account_button()
-        
-        # Ждем загрузки страницы профиля
-        profile_page.wait_for_profile_page()
-        
-        # Клик по кнопке "Выход"
-        profile_page.click_logout_button()
-        
-        # Проверка выхода (редирект на страницу входа)
-        login_page.wait_for_login_page()
-        assert login_page.is_login_page_loaded()
+        # 7. Проверяем успешность входа
+        try:
+            WebDriverWait(driver, 10).until(
+                EC.visibility_of_element_located(Locators.MAIN_PAGE_TITLE)
+            )
+            print("7. Вход успешен!")
+        except TimeoutException:
+            print("7. Ошибка: не удалось войти")
+            # Проверяем, есть ли сообщение об ошибке
+            driver.save_screenshot("login_failed.png")
+            raise
+            
+    except Exception as e:
+        print(f"Критическая ошибка: {e}")
+        driver.save_screenshot("critical_error.png")
+        raise

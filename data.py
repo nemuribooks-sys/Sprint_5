@@ -4,9 +4,9 @@ import time
 
 class TestData:
     def __init__(self):
-        self.base_email = "test_user_"
-        self.base_password = "Password123"
-        self.base_name = "Test User"
+        self.base_email = "maria_egorenkova_38_546@yandex.ru"
+        self.base_password = "123456"
+        self.base_name = "Мария"
     
     def generate_random_email(self):
         """Генерация уникального email"""
