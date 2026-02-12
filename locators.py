@@ -28,13 +28,14 @@ class Locators:
     LOGIN_LINK = (By.XPATH, "//a[text()='Войти']")  # Ссылка "Войти" на странице регистрации
     REGISTER_LINK = (By.XPATH, "//a[text()='Зарегистрироваться']")  # Ссылка "Зарегистрироваться" на странице входа
     FORGOT_PASSWORD_LINK = (By.XPATH, "//a[text()='Восстановить пароль']")  # Ссылка восстановления пароля
-    LOGIN_LINK_FORGOT_PASSWORD = (By.XPATH, "//a[text()='Войти']")  # Ссылка "Войти" на странице восстановления пароля
+    RESTORE_BUTTON = (By.XPATH, "//button[text()='Восстановить']")  # Ссылка "Восстановить" на странице восстановления пароля
     
     # Личный кабинет
     PROFILE_LINK = (By.XPATH, "//a[text()='Профиль']")  # Вкладка "Профиль" в личном кабинете
     LOGOUT_BUTTON = (By.XPATH, "//button[text()='Выход']")  # Кнопка выхода из аккаунта
     
     # Конструктор
+    CONSTRUCTOR_LINK = (By.XPATH, "//p[text()='Конструктор']")
     BUNS_SECTION = (By.XPATH, "//span[text()='Булки']")  # Раздел "Булки"
     SAUCES_SECTION = (By.XPATH, "//span[text()='Соусы']")  # Раздел "Соусы"
     FILLINGS_SECTION = (By.XPATH, "//span[text()='Начинки']")  # Раздел "Начинки"
@@ -46,7 +47,7 @@ class Locators:
     FILLINGS_SECTION_TITLE = (By.XPATH, "//h2[text()='Начинки']")  # Заголовок раздела начинок
     
     # Ошибки
-    PASSWORD_ERROR = (By.XPATH, "//p[contains(@class, 'input__error')]")  # Ошибка пароля
+    INCORRECT_PASSWORD_ERROR = (By.XPATH, "//p[text()='Некорректный пароль']")  # Ошибка пароля
     
     # Успешная регистрация
     SUCCESSFUL_REGISTRATION = (By.XPATH, "//h2[text()='Вход']")  # После регистрации переходим на страницу входа

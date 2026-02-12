@@ -1,100 +1,43 @@
-import random
 import pytest
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.firefox.service import Service as FirefoxService
-from webdriver_manager.chrome import ChromeDriverManager
-from webdriver_manager.firefox import GeckoDriverManager
-from pages.main_page import MainPage
-from pages.login_page import LoginPage
+from selenium.webdriver.chrome.options import Options
 
-def pytest_addoption(parser):
-    """Добавление опций командной строки"""
-    parser.addoption("--browser", action="store", default="chrome", 
-                     help="Браузер для тестов: chrome или firefox")
-    parser.addoption("--url", action="store", 
-                     default="https://stellarburgers.education-services.ru/", 
-                     help="Базовый URL приложения")
+from curl import *
+from data import Credentials
+from locators import Locators
+
 
 @pytest.fixture(scope="function")
-def driver(request):
-    """Фикстура для создания драйвера"""
-    browser = request.config.getoption("--browser")
-    url = request.config.getoption("--url")
+def driver():
+    options = Options()
+    options.add_argument("--window-size=1600,900")
+    options.add_experimental_option("prefs", {
+            "profile.password_manager_leak_detection": False
+        })
+    #options.add_argument("--headless")
+    browser = webdriver.Chrome(options=options)
+    browser.get(main_site)
+    yield browser
+    browser.quit()
     
-    if browser == "chrome":
-        # Для Chrome
-        options = webdriver.ChromeOptions()
-        options.add_argument("--start-maximized")
-        driver = webdriver.Chrome(
-            service=ChromeService(ChromeDriverManager().install()),
-            options=options
-        )
-    elif browser == "firefox":
-        # Для Firefox
-        options = webdriver.FirefoxOptions()
-        options.add_argument("--width=1920")
-        options.add_argument("--height=1080")
-        driver = webdriver.Firefox(
-            service=FirefoxService(GeckoDriverManager().install()),
-            options=options
-        )
-    else:
-        raise ValueError(f"Браузер {browser} не поддерживается")
-    
-    driver.get(url)
-    driver.implicitly_wait(10)
-    
-    yield driver
-    
-    driver.quit()
+    # Для Firefox
+    options = Options()
+    options.add_argument("--window-size=1600,900")
+    options.add_experimental_option("prefs", {
+            "profile.password_manager_leak_detection": False
+        })
+    #options.add_argument("--headless")
+    browser = webdriver.Firefox(options=options)
+    browser.get(main_site)
+    yield browser
+    browser.quit()
 
 @pytest.fixture
-def test_data():
-    """Фикстура с тестовыми данными"""
-    class TestData:
-        @staticmethod
-        def get_unregistered_user():
-            return {
-                "name": "НовыйПользователь",
-                "email": f"test_{random.randint(1000, 9999)}@example.com",  # noqa: F821
-                "password": "Qwerty123"
-            }
-        
-        @staticmethod
-        def get_valid_user():
-            return {
-                "name": "Мария",
-                "email": "maria_egorenkova_38_546@yandex.ru",
-                "password": "123456"
-            }
-    
-    return TestData()
+def login(driver):
+    driver.find_element(*Locators.EMAIL_INPUT).send_keys(Credentials.email)
+    driver.find_element(*Locators.PASSWORD_INPUT).send_keys(Credentials.password)
+    driver.find_element(*Locators.LOGIN_FORM_BUTTON).click()
 
-@pytest.fixture
-def authenticated_user(driver):
-    login_page = LoginPage(driver)
-    main_page = MainPage(driver)
-    
-    test_email = "maria_egorenkova_38_546@yandex.ru"
-    test_password = "123456"
-    
-    # 1. Переходим на страницу входа
-    driver.get("https://stellarburgers.education-services.ru/login")
-    login_page.wait_for_login_page_loaded()
-    
-    # 2. Выполняем вход
-    login_page.login(test_email, test_password)
-    
-    # 3. Ждем загрузки главной страницы
-    main_page.wait_for_main_page()
-    
-    # Проверяем, что вход выполнен успешно
-    assert main_page.is_profile_button_visible(), "Пользователь не авторизовался"
-    
-    # Возвращаем объект главной страницы
-    # Можете возвращать словарь с несколькими объектами, если нужно
-    return {
-        "main_page": main_page,
-        "login_page": login_page
-    }
+    return driver
