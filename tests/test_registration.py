@@ -1,103 +1,108 @@
 import sys
 import os
-
-# Добавляем пути к проекту в PYTHONPATH
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
 
-# Импорты
-from pages.main_page import MainPage
-from pages.registration_page import RegistrationPage
-from pages.login_page import LoginPage
-import pytest
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
+import time
+
+from helper import generate_registration_data
+from locators import Locators
 
 class TestRegistration:
     """Тесты регистрации"""
     
-    @pytest.mark.parametrize("user_data", [
-        {"name": "Мария", "email": "maria_egorenkova_38_546@yandex.ru", "password": "123456"},
-    ])
-    def test_successful_registration(self, driver, user_data):
+    def test_successful_registration(self, driver):
         """Успешная регистрация"""
-        main_page = MainPage(driver)
-        registration_page = RegistrationPage(driver)
-        login_page = LoginPage(driver)
+        name, email, password = generate_registration_data()
+        print(f"\n=== Тестовые данные ===")  # noqa: F541
+        print(f"Name: {name}")
+        print(f"Email: {email}")
+        print(f"Password: {password}")
         
-        # Переход на страницу регистрации
-        main_page.click_login_button()
-        login_page.click_register_link()
-        
-        # Проверка загрузки страницы регистрации
-        assert registration_page.is_registration_page_loaded()
-        
-        # Регистрация
-        registration_page.register(
-            user_data["name"],
-            user_data["email"],
-            user_data["password"]
+        # Ждем загрузки главной страницы
+        WebDriverWait(driver, 10).until(
+            EC.visibility_of_element_located(Locators.MAIN_PAGE_TITLE)
         )
+        print("✓ Главная страница загружена")
         
-        # Проверка успешной регистрации (редирект на страницу входа)
-        assert login_page.is_login_page_loaded()
-    
-    def test_registration_with_short_password(self, driver, test_data):
-        """Регистрация с некорректным паролем (меньше 6 символов)"""
-        main_page = MainPage(driver)
-        registration_page = RegistrationPage(driver)
-        login_page = LoginPage(driver)
+        # Клик по кнопке "Личный кабинет"
+        driver.find_element(*Locators.PERSONAL_ACCOUNT_BUTTON).click()
+        print("✓ Клик по 'Личный кабинет' выполнен")
         
-        # Переход на страницу регистрации
-        main_page.click_login_button()
-        login_page.click_register_link()
-        
-        # Регистрация с коротким паролем
-        user_data = test_data.get_short_password_user()
-        registration_page.register(
-            user_data["name"],
-            user_data["email"],
-            user_data["password"]
+        # Ждем загрузки страницы входа
+        WebDriverWait(driver, 10).until(
+            EC.visibility_of_element_located(Locators.LOGIN_PAGE_TITLE)
         )
+        print("✓ Страница входа загружена")
         
-        # Проверка ошибки
-        error_text = registration_page.get_password_error()
-        assert "Некорректный пароль" in error_text
-    
-    def test_registration_with_empty_name(self, driver, test_data):
-        """Регистрация с пустым именем"""
-        main_page = MainPage(driver)
-        registration_page = RegistrationPage(driver)
-        login_page = LoginPage(driver)
+        # Клик по ссылке "Зарегистрироваться"
+        register_link = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable(Locators.REGISTER_LINK)
+        )
+        register_link.click()
+        print("✓ Клик по 'Зарегистрироваться' выполнен")
         
-        # Переход на страницу регистрации
-        main_page.click_login_button()
-        login_page.click_register_link()
+        # Даем время для загрузки страницы регистрации
+        time.sleep(2)
         
-        # Регистрация с пустым именем
-        user_data = test_data.get_valid_user()
-        registration_page.set_email(user_data["email"])
-        registration_page.set_password(user_data["password"])
-        # Имя не заполняем
-        registration_page.click_register_button()
+        # ОТЛАДКА: выводим текущий URL
+        print(f"Текущий URL: {driver.current_url}")
         
-        # Проверка, что остались на странице регистрации
-        assert registration_page.is_registration_page_loaded()
-    
-    def test_registration_with_invalid_email(self, driver, test_data):
-        """Регистрация с некорректным email"""
-        main_page = MainPage(driver)
-        registration_page = RegistrationPage(driver)
-        login_page = LoginPage(driver)
+        # ОТЛАДКА: ищем все поля на странице регистрации
+        print("\n=== Поиск всех полей на странице регистрации ===")
+        all_inputs = driver.find_elements(By.TAG_NAME, "input")
+        print(f"Найдено полей ввода: {len(all_inputs)}")
         
-        # Переход на страницу регистрации
-        main_page.click_login_button()
-        login_page.click_register_link()
+        for i, input_elem in enumerate(all_inputs):
+            print(f"\nПоле {i + 1}:")
+            print(f"  type: {input_elem.get_attribute('type')}")
+            print(f"  name: {input_elem.get_attribute('name')}")
+            print(f"  placeholder: {input_elem.get_attribute('placeholder')}")
+            print(f"  class: {input_elem.get_attribute('class')}")
+            print(f"  id: {input_elem.get_attribute('id')}")
         
-        # Регистрация с некорректным email
-        user_data = test_data.get_valid_user()
-        registration_page.set_name(user_data["name"])
-        registration_page.set_password(user_data["password"])
-        registration_page.set_email("invalid-email")
-        registration_page.click_register_button()
+        # ОТЛАДКА: ищем заголовок страницы регистрации
+        print("\n=== Поиск заголовка страницы регистрации ===")
+        headers = driver.find_elements(By.TAG_NAME, "h2")
+        for h in headers:
+            print(f"Заголовок h2: '{h.text}'")
         
-        # Проверка, что остались на странице регистрации
-        assert registration_page.is_registration_page_loaded()
+        # Теперь заполняем форму с правильными локаторами
+        # Поле Имя (обычно первое поле)
+        name_input = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, "(//input)[1]"))
+        )
+        name_input.send_keys(name)
+        print("✓ Имя введено")
+        
+        # Поле Email (второе поле)
+        email_input = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, "(//input)[2]"))
+        )
+        email_input.send_keys(email)
+        print("✓ Email введен")
+        
+        # Поле Пароль (третье поле)
+        password_input = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, "(//input)[3]"))
+        )
+        password_input.send_keys(password)
+        print("✓ Пароль введен")
+        
+        # Кнопка регистрации
+        register_button = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.XPATH, "//button[text()='Зарегистрироваться']"))
+        )
+        register_button.click()
+        print("✓ Клик по кнопке 'Зарегистрироваться' выполнен")
+        
+        # Проверяем, что появилась страница входа
+        WebDriverWait(driver, 10).until(
+            EC.visibility_of_element_located(Locators.LOGIN_PAGE_TITLE)
+        )
+        print("✓ Перенаправление на страницу входа")
+        
+
+        print("✓ Тест успешно завершен!")

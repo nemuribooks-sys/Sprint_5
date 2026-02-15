@@ -5,49 +5,50 @@ class Locators:
     """Локаторы для элементов Stellar Burgers"""
     
     # Заголовки
-    MAIN_PAGE_TITLE = (By.XPATH, "//h1[text()='Соберите бургер']")  # Заголовок главной страницы
-    LOGIN_PAGE_TITLE = (By.XPATH, "//h2[text()='Вход']")  # Заголовок страницы входа
-    REGISTRATION_PAGE_TITLE = (By.XPATH, "//h2[text()='Регистрация']")  # Заголовок регистрации
+    MAIN_PAGE_TITLE = (By.XPATH, "//h1[text()='Соберите бургер']")
+    LOGIN_PAGE_TITLE = (By.XPATH, "//h2[text()='Вход']")
+    REGISTRATION_PAGE_TITLE = (By.XPATH, "//h2[text()='Регистрация']")
     
     # Кнопки навигации
-    LOGIN_TO_ACCOUNT_BUTTON = (By.XPATH, "//button[text()='Войти в аккаунт']")  # Кнопка "Войти в аккаунт" на главной
-    PERSONAL_ACCOUNT_BUTTON = (By.XPATH, "//p[text()='Личный Кабинет']")  # Кнопка "Личный кабинет"
-    CONSTRUCTOR_BUTTON = (By.XPATH, "//p[text()='Конструктор']")  # Кнопка "Конструктор"
-    LOGO = (By.XPATH, "//div[@class='AppHeader_header__logo__2D0X2']")  # Логотип Stellar Burgers
-    
+    LOGIN_TO_ACCOUNT_BUTTON = (By.XPATH, "//button[text()='Войти в аккаунт']") 
+    PERSONAL_ACCOUNT_BUTTON = (By.XPATH, "//p[text()='Личный Кабинет']")
+    CONSTRUCTOR_BUTTON = (By.XPATH, "//p[text()='Конструктор']")
+    LOGO = (By.XPATH, "//a[@href='/']")
     # Формы
-    NAME_INPUT = (By.XPATH, "//label[text()='Имя']")  # Поле ввода имени
-    EMAIL_INPUT = (By.XPATH, "//label[text()='Email']")  # Поле ввода email
-    PASSWORD_INPUT = (By.XPATH, "//label[text()='Пароль']")  # Поле ввода пароля
+    NAME_INPUT = (By.XPATH, "//input[@name='Имя']")
+    EMAIL_INPUT = (By.XPATH, "//input[@name='Email']") 
+    PASSWORD_INPUT = (By.XPATH, "//input[@type='Пароль']")
     
     # Кнопки форм
-    REGISTER_BUTTON = (By.XPATH, "//button[text()='Зарегистрироваться']")  # Кнопка регистрации
-    LOGIN_FORM_BUTTON = (By.XPATH, "//a[text()='Войти']")  # Кнопка входа в форме
+    REGISTER_BUTTON = (By.XPATH, "//button[text()='Зарегистрироваться']")
+    LOGIN_FORM_BUTTON = (By.XPATH, "//button[text()='Войти']")
     
     # Ссылки
-    LOGIN_LINK = (By.XPATH, "//a[text()='Войти']")  # Ссылка "Войти" на странице регистрации
-    REGISTER_LINK = (By.XPATH, "//a[text()='Зарегистрироваться']")  # Ссылка "Зарегистрироваться" на странице входа
-    FORGOT_PASSWORD_LINK = (By.XPATH, "//a[text()='Восстановить пароль']")  # Ссылка восстановления пароля
-    RESTORE_BUTTON = (By.XPATH, "//button[text()='Восстановить']")  # Ссылка "Восстановить" на странице восстановления пароля
+    LOGIN_LINK = (By.XPATH, "//a[text()='Войти']")
+    REGISTER_LINK = (By.XPATH, "//a[text()='Зарегистрироваться']")
+    FORGOT_PASSWORD_LINK = (By.XPATH, "//a[text()='Восстановить пароль']")
+    LOGIN_LINK_FORGOT_PASSWORD = (By.XPATH, "//a[text()='Войти']")
     
     # Личный кабинет
-    PROFILE_LINK = (By.XPATH, "//a[text()='Профиль']")  # Вкладка "Профиль" в личном кабинете
-    LOGOUT_BUTTON = (By.XPATH, "//button[text()='Выход']")  # Кнопка выхода из аккаунта
+    PROFILE_LINK = (By.XPATH, "//a[text()='Профиль']")
+    LOGOUT_BUTTON = (By.XPATH, "//button[text()='Выход']")
     
     # Конструктор
-    CONSTRUCTOR_LINK = (By.XPATH, "//p[text()='Конструктор']")
-    BUNS_SECTION = (By.XPATH, "//span[text()='Булки']")  # Раздел "Булки"
-    SAUCES_SECTION = (By.XPATH, "//span[text()='Соусы']")  # Раздел "Соусы"
-    FILLINGS_SECTION = (By.XPATH, "//span[text()='Начинки']")  # Раздел "Начинки"
+    BUNS_SECTION = (By.XPATH, "//span[text()='Булки']")
+    SAUCES_SECTION = (By.XPATH, "//span[text()='Соусы']")
+    FILLINGS_SECTION = (By.XPATH, "//span[text()='Начинки']")
     
     # Активные разделы конструктора
-    ACTIVE_SECTION = (By.XPATH, "//div[contains(@class, 'current')]")  # Активный раздел
-    BUNS_SECTION_TITLE = (By.XPATH, "//h2[text()='Булки']")  # Заголовок раздела булок
-    SAUCES_SECTION_TITLE = (By.XPATH, "//h2[text()='Соусы']")  # Заголовок раздела соусов
-    FILLINGS_SECTION_TITLE = (By.XPATH, "//h2[text()='Начинки']")  # Заголовок раздела начинок
+    ACTIVE_BUNS_SECTION = (By.XPATH, "//span[text()='Булки']/parent::*[contains(@class, 'current')]")
+    ACTIVE_SAUCES_SECTION = (By.XPATH, "//span[text()='Соусы']/parent::*[contains(@class, 'current')]") 
+    ACTIVE_FILLINGS_SECTION = (By.XPATH, "//span[text()='Начинки']/parent::*[contains(@class, 'current')]") 
+    
+    BUNS_SECTION_TITLE = (By.XPATH, "//h2[text()='Булки']")
+    SAUCES_SECTION_TITLE = (By.XPATH, "//h2[text()='Соусы']")
+    FILLINGS_SECTION_TITLE = (By.XPATH, "//h2[text()='Начинки']")
     
     # Ошибки
-    INCORRECT_PASSWORD_ERROR = (By.XPATH, "//p[text()='Некорректный пароль']")  # Ошибка пароля
+    PASSWORD_ERROR = (By.XPATH, "//p[contains(@class, 'input__error')]")
     
     # Успешная регистрация
-    SUCCESSFUL_REGISTRATION = (By.XPATH, "//h2[text()='Вход']")  # После регистрации переходим на страницу входа
+    SUCCESSFUL_REGISTRATION = (By.XPATH, "//h2[text()='Вход']")

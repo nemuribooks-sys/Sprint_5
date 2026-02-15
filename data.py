@@ -1,4 +1,6 @@
+# data.py
 class Credentials:
-     name='Мария'
-     email='maria_egorenkova_38_546@yandex.ru'
-     password='123456'
+    # Используем заглавные буквы для констант
+    NAME = 'мария'
+    EMAIL = 'maria_egorenkova_38_546@yandex.ru'
+    PASSWORD = '123456'
