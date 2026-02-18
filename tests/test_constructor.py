@@ -8,7 +8,7 @@ class TestConstructor:
     
     def test_buns_section_navigation(self, driver):
         """Переход к разделу 'Булки'"""
-        driver.get("https://stellarburgers.education-services.ru/")
+        driver.find_element(*Locators.MAIN_PAGE_TITLE).click()
         
         # Клик по разделу "Соусы"
         driver.find_element(*Locators.SAUCES_SECTION).click()
@@ -23,7 +23,7 @@ class TestConstructor:
     
     def test_sauces_section_navigation(self, driver):
         """Переход к разделу 'Соусы'"""
-        driver.get("https://stellarburgers.education-services.ru/")
+        driver.find_element(*Locators.MAIN_PAGE_TITLE).click()
         
         # Клик по разделу "Соусы"
         driver.find_element(*Locators.SAUCES_SECTION).click()
@@ -35,7 +35,7 @@ class TestConstructor:
     
     def test_fillings_section_navigation(self, driver):
         """Переход к разделу 'Начинки'"""
-        driver.get("https://stellarburgers.education-services.ru/")
+        driver.find_element(*Locators.MAIN_PAGE_TITLE).click()
         
         # Клик по разделу "Начинки"
         driver.find_element(*Locators.FILLINGS_SECTION).click()
@@ -47,7 +47,7 @@ class TestConstructor:
     
     def test_switch_between_sections(self, driver):
         """Переключение между разделами конструктора"""
-        driver.get("https://stellarburgers.education-services.ru/")
+        driver.find_element(*Locators.MAIN_PAGE_TITLE).click()
         
         # Переход к разделу "Соусы"
         driver.find_element(*Locators.SAUCES_SECTION).click()

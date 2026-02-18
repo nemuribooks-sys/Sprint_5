@@ -1,4 +1,4 @@
-# urls.py (переименуйте из curl.py)
+# urls.py
 BASE_URL = 'https://stellarburgers.education-services.ru'
 
 # URL-ы страниц
