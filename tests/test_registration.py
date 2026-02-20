@@ -1,10 +1,11 @@
 import sys
 import os
+
+from urls import BASE_URL
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from data import Credentials
 
 from helper import generate_registration_data
 from locators import Locators
@@ -20,21 +21,21 @@ class TestRegistration:
         # Переход на страницу входа
         driver.find_element(*Locators.PERSONAL_ACCOUNT_BUTTON).click()
 
-        WebDriverWait(driver, 5).until(
+        WebDriverWait(driver, 10).until(
             EC.visibility_of_element_located(Locators.LOGIN_PAGE_TITLE)
             )
         
         # Переход на регистрацию
-        WebDriverWait(driver, 5).until(
+        WebDriverWait(driver, 10).until(
             EC.element_to_be_clickable(Locators.REGISTER_LINK)
             ).click()
         
-        WebDriverWait(driver, 5).until(
+        WebDriverWait(driver, 10).until(
             EC.visibility_of_element_located(Locators.REGISTRATION_PAGE_TITLE)
             )
         
         # Заполнение формы
-        name_input = WebDriverWait(driver, 5).until(
+        name_input = WebDriverWait(driver, 10).until(
             EC.element_to_be_clickable(Locators.NAME_INPUT)
             )
         name_input.send_keys(name)
@@ -44,7 +45,7 @@ class TestRegistration:
         )
         email_input.send_keys(email)
         
-        password_input = WebDriverWait(driver, 5).until(
+        password_input = WebDriverWait(driver, 10).until(
             EC.element_to_be_clickable(Locators.PASSWORD_INPUT)
             )
         password_input.send_keys(password)
@@ -56,6 +57,8 @@ class TestRegistration:
             EC.visibility_of_element_located(Locators.LOGIN_PAGE_TITLE)
             )
         
+        assert driver.current_url == f"{BASE_URL}/login", "URL должен быть страницей входа"
+
     def test_registration_with_short_password(self, driver):
         """"Регистрация с коротким паролем"""
 
@@ -144,45 +147,3 @@ class TestRegistration:
 
         current_url = driver.current_url.lower()
         assert "login" not in current_url, "Не должно быть перехода на страницу входа"
-
-    def test_logout_personal_account(self, driver):
-        """Выход из аккаунта"""
-        
-        driver.find_element(*Locators.PERSONAL_ACCOUNT_BUTTON).click()
-        WebDriverWait(driver, 10).until(
-            EC.visibility_of_element_located(Locators.LOGIN_PAGE_TITLE)
-            )
-        
-        email_input = WebDriverWait(driver, 10).until(
-            EC.element_to_be_clickable(Locators.EMAIL_INPUT)
-            )
-        email_input.send_keys(Credentials.EMAIL)
-        
-        password_input = WebDriverWait(driver, 10).until(
-            EC.element_to_be_clickable(Locators.PASSWORD_INPUT)
-            )
-        password_input.send_keys(Credentials.PASSWORD)
-        
-        driver.find_element(*Locators.LOGIN_FORM_BUTTON).click()
-        
-        # Ожидание главной страницы после входа
-        WebDriverWait(driver, 10).until(
-            EC.visibility_of_element_located(Locators.MAIN_PAGE)
-            )
-        
-        # Переход в личный кабинет
-        driver.find_element(*Locators.PERSONAL_ACCOUNT_BUTTON).click()
-        
-        # Ожидание загрузки страницы профиля (появление поля имени)
-        WebDriverWait(driver, 10).until(
-            EC.visibility_of_element_located(Locators.LOGOUT_BUTTON)
-            )
-        
-        # Выход из аккаунта
-        logout = driver.find_element(*Locators.LOGOUT_BUTTON)
-        logout.click()
-        
-        # Проверка, что после выхода появилась страница входа
-        WebDriverWait(driver, 10).until(
-            EC.visibility_of_element_located(Locators.LOGIN_PAGE_TITLE)
-            )

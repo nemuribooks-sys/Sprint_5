@@ -2,8 +2,6 @@ import pytest
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
-from data import Credentials
-from locators import Locators
 from urls import BASE_URL
 
 # session, module, class, function
@@ -19,16 +17,3 @@ def driver():
     browser.get(BASE_URL)
     yield browser
     browser.quit()
-
-
-@pytest.fixture
-def login(driver):
-    """
-    Фикстура для авторизации пользователя.
-    """
-    driver.find_element(*Locators.NAME_INPUT).send_keys(Credentials.NAME)
-    driver.find_element(*Locators.EMAIL_INPUT).send_keys(Credentials.EMAIL)
-    driver.find_element(*Locators.PASSWORD_INPUT).send_keys(Credentials.PASSWORD)
-    driver.find_element(*Locators.REGISTER_BUTTON).click()
-
-    return driver

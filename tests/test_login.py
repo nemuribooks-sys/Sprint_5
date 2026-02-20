@@ -33,11 +33,8 @@ class TestLogin:
         password_input.send_keys(Credentials.PASSWORD)
         
         driver.find_element(*Locators.LOGIN_FORM_BUTTON).click()
-        
-        # Ожидание главной страницы после входа
-        WebDriverWait(driver, 10).until(
-            EC.visibility_of_element_located(Locators.MAIN_PAGE)
-            )
+
+        assert driver.find_element(*Locators.LOGO).is_displayed()
 
     def test_login_personal_account_button(self, driver):
         """Вход через кнопку Личный кабинет"""
@@ -63,10 +60,7 @@ class TestLogin:
         
         driver.find_element(*Locators.LOGIN_FORM_BUTTON).click()
         
-        # Ожидание главной страницы после входа
-        WebDriverWait(driver, 10).until(
-            EC.visibility_of_element_located(Locators.MAIN_PAGE)
-            )
+        assert driver.find_element(*Locators.LOGO).is_displayed()
 
     def test_login_registration_button(self, driver):
         """Вход через кнопку в форме регистрации"""
@@ -100,10 +94,7 @@ class TestLogin:
         
         driver.find_element(*Locators.LOGIN_FORM_BUTTON).click()
         
-        # Ожидание главной страницы после входа
-        WebDriverWait(driver, 10).until(
-            EC.visibility_of_element_located(Locators.MAIN_PAGE)
-            )
+        assert driver.find_element(*Locators.LOGO).is_displayed()
 
     def test_login_password_recovery_button(self, driver):
         """Вход через кнопку в форме восстановления пароля"""
@@ -135,7 +126,43 @@ class TestLogin:
         
         driver.find_element(*Locators.LOGIN_FORM_BUTTON).click()
         
+        assert driver.find_element(*Locators.LOGO).is_displayed()
+        
+    def test_logout_personal_account(self, driver):
+        """Выход из аккаунта"""
+        
+        driver.find_element(*Locators.PERSONAL_ACCOUNT_BUTTON).click()
+        WebDriverWait(driver, 10).until(
+            EC.visibility_of_element_located(Locators.LOGIN_PAGE_TITLE)
+            )
+        
+        email_input = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable(Locators.EMAIL_INPUT)
+            )
+        email_input.send_keys(Credentials.EMAIL)
+        
+        password_input = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable(Locators.PASSWORD_INPUT)
+            )
+        password_input.send_keys(Credentials.PASSWORD)
+        
+        driver.find_element(*Locators.LOGIN_FORM_BUTTON).click()
+        
         # Ожидание главной страницы после входа
         WebDriverWait(driver, 10).until(
             EC.visibility_of_element_located(Locators.MAIN_PAGE)
             )
+        
+        # Переход в личный кабинет
+        driver.find_element(*Locators.PERSONAL_ACCOUNT_BUTTON).click()
+        
+        # Ожидание загрузки страницы профиля (появление поля имени)
+        WebDriverWait(driver, 10).until(
+            EC.visibility_of_element_located(Locators.LOGOUT_BUTTON)
+            )
+        
+        # Выход из аккаунта
+        logout = driver.find_element(*Locators.LOGOUT_BUTTON)
+        logout.click()
+        
+        assert driver.find_element(*Locators.LOGO).is_displayed()

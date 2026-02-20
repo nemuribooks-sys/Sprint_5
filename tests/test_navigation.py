@@ -20,10 +20,7 @@ class TestNavigation:
         # Клик по кнопке "Личный кабинет"
         driver.find_element(*Locators.LOGIN_TO_ACCOUNT_BUTTON).click()
 
-        # Ожидание формы страницы "Вход"
-        WebDriverWait(driver, 10).until(
-            EC.visibility_of_element_located(Locators.LOGIN_PAGE_TITLE)
-            )
+        assert driver.find_element(*Locators.LOGIN_PAGE_TITLE).is_displayed()
 
     def test_constructor_navigation(self, driver):
         """Тест перехода по клику на «Конструктор»"""
@@ -38,6 +35,8 @@ class TestNavigation:
 
         # Клик по кнопке "Конструктор"
         driver.find_element(*Locators.CONSTRUCTOR_BUTTON).click()
+
+        assert driver.find_element(*Locators.MAIN_PAGE_TITLE).is_displayed()
     
     def test_logo_navigation(self, driver):
         """Тест перехода по клику на логотип Stellar Burgers"""
@@ -52,3 +51,5 @@ class TestNavigation:
 
         # Клик на логотип Stellar Burgers
         driver.find_element(*Locators.LOGO).click()
+        
+        assert driver.find_element(*Locators.MAIN_PAGE_TITLE).is_displayed()   

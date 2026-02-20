@@ -1,6 +1,4 @@
 from selenium.webdriver.common.by import By
-
-
 class Locators:
     """Локаторы для элементов Stellar Burgers"""
     
